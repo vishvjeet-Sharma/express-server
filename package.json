@@ -5,7 +5,12 @@
   "main": "index.js",
   "scripts": {
     "start:extra": "babel-node extra",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start:extraTs": "tsc-watch --project . --onSuccess \"npm run nodemon\"",
+    "nodemon": "nodemon ./dist/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "husky install",
+    "lint": "eslint . --ext .ts",
+    "lint-and-fix": "eslint . --ext .ts --fix"
   },
   "repository": {
     "type": "git",
@@ -20,7 +25,10 @@
   "devDependencies": {
     "@babel/core": "^7.16.7",
     "@babel/node": "^7.16.7",
-    "@babel/preset-env": "^7.16.7"
+    "@babel/preset-env": "^7.16.7",
+    "nodemon": "^2.0.15",
+    "tsc-watch": "^4.6.0",
+    "typescript": "^4.5.4"
   },
   "dependencies": {}
 }
