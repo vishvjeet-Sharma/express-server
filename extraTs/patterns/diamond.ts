@@ -1,26 +1,26 @@
-const diamond = (n) => {
+const diamond = (num: number) => {
   // let n = 5;
   let output = '';
   // Upside pyramid
-  for (let i = 1; i <= n; i += 1) {
+  for (let i: number = 1; i <= num; i++) {
     // printing spaces
-    for (let j = n; j > i; j -= 1) {
+    for (let j: number = num; j > i; j--) {
       output += ' ';
     }
     // printing star
-    for (let k = 0; k < i * 2 - 1; k += 1) {
+    for (let k: number = 0; k < (i * 2) - 1; k++) {
       output += '*';
     }
     output += '\n';
   }
   // downside pyramid
-  for (let i = 1; i <= n - 1; i += 1) {
+  for (let i: number = 1; i <= num - 1; i++) {
     // printing spaces
-    for (let j = 0; j < i; j += 1) {
+    for (let j: number = 0; j < i; j++) {
       output += ' ';
     }
     // printing star
-    for (let k = (n - i) * 2 - 1; k > 0; k -= 1) {
+    for (let k: number = ((num - i) * 2) - 1; k > 0; k--) {
       output += '*';
     }
     output += '\n';

@@ -1,5 +1,7 @@
-export const permissions = {
-  getUsers: {
+import {IEmailType, IUserType} from './interfaces';
+
+const permissions : IUserType = {
+  ['getUsers']: {
     all: ['head-trainer'],
     read: ['trainee', 'trainer'],
     write: ['trainer'],
@@ -7,7 +9,7 @@ export const permissions = {
   },
 };
 
-export const users = [
+const users : IEmailType[] = [
   {
     traineeEmail: 'shubham@successive.tech',
     reviewerEmail: 'reviewer1@successive.tech',
@@ -25,3 +27,5 @@ export const users = [
     reviewerEmail: 'abc@gmail.com',
   },
 ];
+
+export {permissions, users};

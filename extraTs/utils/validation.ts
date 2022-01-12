@@ -1,13 +1,13 @@
-/* eslint-disable array-callback-return */
-/* eslint-disable no-unused-expressions */
+import {IEmailType} from '../interfaces';
+
 import validateEmail from './helpers';
 
-const validUsers = [];
-const invalidUsers = [];
+const validUsers: string[] = [];
+const invalidUsers: string[] = [];
 
-const validateUsers = (users) => {
-  users.map((element) => {
-    const { traineeEmail, reviewerEmail } = element;
+const validateUsers = (users: IEmailType[]) => {
+  users.map((element: IEmailType) => {
+    const {traineeEmail, reviewerEmail} = element;
     validateEmail(traineeEmail)
       ? validUsers.push(traineeEmail)
       : invalidUsers.push(traineeEmail);
@@ -18,13 +18,11 @@ const validateUsers = (users) => {
   console.log('Valid Users: ');
   validUsers.map((element) => {
     console.log(element);
-    return element;
   });
   console.log('No. of valid users: ', validUsers.length);
   console.log('Invalid Users: ');
   invalidUsers.map((element) => {
     console.log(element);
-    return element;
   });
   console.log('No. of Invalid users: ', invalidUsers.length);
 };
