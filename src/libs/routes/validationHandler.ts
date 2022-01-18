@@ -1,6 +1,6 @@
 import { checkSchema, validationResult } from 'express-validator/check';
 
-const validationHandler = (validator) => {
+const validationHandler = (validator): any => {
     return [
         checkSchema(validator),
         (req, res, next) => {
