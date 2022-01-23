@@ -37,7 +37,7 @@ export default class Server {
   bootstrap() {
     this.initBodyParser();
     this.setupRoutes();
-    return this;
+    return this.app;
   }
 
   /**
