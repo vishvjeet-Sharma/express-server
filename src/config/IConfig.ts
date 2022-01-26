@@ -3,4 +3,5 @@ export interface IConfig {
     env: string;
     secret : string;
     mongoURL : string;
+    password : string;
   }

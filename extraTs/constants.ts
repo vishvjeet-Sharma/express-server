@@ -9,7 +9,7 @@ const Trainees: string = 'trainees';
 const permissions: IUserType = {
   [Users]: {
     all: [headTrainer],
-    read : [trainee, trainer],
+    read : [trainee, headTrainer, trainer],
     write : [trainer],
     delete: [trainer],
   },
@@ -29,3 +29,5 @@ const users : IEmailType[] = [
 ];
 
 export {permissions, users, Trainees, Users};
+export const BCRYPT_SALT_ROUNDS: number = 5;
+
