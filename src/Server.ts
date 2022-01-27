@@ -14,7 +14,7 @@ export default class Server {
    */
   setupRoutes() {
     this.app.get('/health-check', (req, res) => {
-      res.send("'I am OK");
+      res.send("I am OK");
     });
     this.app.use('/api', router);
     this.app.use(routes.notFoundRoute);
