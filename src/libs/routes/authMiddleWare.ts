@@ -6,29 +6,33 @@ import UserRepository from '../../repositories /user /UserRepository';
 const userRepository: UserRepository = new UserRepository();
 
 export default (module, permissionType) => async (req, res, next) => {
-  const token = req.header('Authorization');
+  let token = req.header('Authorization');
+  console.log('hello', token);
+
   if (!token) {
-    return next({
-      error: 'Unauthorized', message: 'Token not found', status: 403,
+    return next({error: 'Authentication Failed', message: 'Token not found', status: 403,
     });
   }
+  if (token.startsWith ('Bearer ')) {
+    token = token.substring(7, token.length);
+}
   const { secret } = config;
+
   let user: any = {};
 
   try {
     user = jwt.verify(token, secret);
   } catch (err) {
-    console.log(err);
-    next({ error: 'Unauthorized', message: 'User not Authorized', status: 403 });
+    next({ error: 'Authentication failed', message: 'User not Authorized', status: 403 });
   }
 
   const userData = await userRepository.findOne({_id: user.originalId});
-  console.log(userData);
 
   if (!userData) {
-    next({error: 'Unauthorized', message: 'User not found', status: 403});
+    next({error: 'Authentication failed', message: 'User not found', status: 403});
   }
   if (!hasPermission(module, userData.role, permissionType)) {
+    console.log(userData.role,module,permissionType,'ajhdsvbajds')
         next({ error: 'Unauthorized', message: 'Permission Denied', status: 403});
   }
   req.user = user;
