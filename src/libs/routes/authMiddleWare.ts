@@ -13,7 +13,6 @@ export default (module, permissionType) => async (req, res, next) => {
     });
   }
   const { secret } = config;
-
   let user: any = {};
 
   try {
@@ -22,6 +21,7 @@ export default (module, permissionType) => async (req, res, next) => {
     console.log(err);
     next({ error: 'Unauthorized', message: 'User not Authorized', status: 403 });
   }
+
   const userData = await userRepository.findOne({_id: user.id});
   console.log(userData);
 

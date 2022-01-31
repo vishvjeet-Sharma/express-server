@@ -1,35 +1,28 @@
 import * as mongoose from 'mongoose';
 import { userModel } from './UserModel';
 import IUserModel from './IUserModel';
+import VersionableRepository from '../versionable/VersionableRepository';
 
-export default class UserRepository {
-    public static createObjectId() {
-        return new mongoose.Types.ObjectId();
-    }
-    public findOne(query): any {
-        return userModel.findOne(query).lean();
-      }
-      public find(query, projection?: any, options?: any): any {
-        return userModel.find(query, projection, options);
-      }
-      public count(): any {
-        return userModel.count();
-      }
-      public create(data: any): any {
-        console.log('UserRepository::create create', data);
-        const id = UserRepository.createObjectId();
-        const model = new userModel({
-            _id: id,
-            ...data,
-        });
-        return model.save();
-      }
-      public update(data: any): mongoose.UpdateQuery<IUserModel> {
-        const { _id , ...userData} = data;
-        return userModel.updateOne({_id} , { ...userData});
-      }
-      public delete(data: any) {
-        const result = userModel.deleteOne(data);
-        return result;
-      }
-    }
+export default class UserRepository extends VersionableRepository<any, mongoose.Model<IUserModel>> {
+  constructor() {
+    super(userModel);
+  }
+  public async findOne(query): Promise<IUserModel> {
+    return await super.findOne(query);
+  }
+  public async find(query, projection?: any, options?: any): Promise<IUserModel[]> {
+    return await super.findAll(query, projection, options);
+  }
+  public async count(): Promise<number> {
+    return await super.count();
+  }
+  public async create(data: any): Promise<IUserModel> {
+    return await super.create(data);
+  }
+  public updateData(filterQuery: any, data): mongoose.UpdateQuery<IUserModel> {
+    return super.update(filterQuery, data);
+  }
+  public delete(data: any): mongoose.Query<object, IUserModel> {
+    return super.softDelete(data);
+  }
+}

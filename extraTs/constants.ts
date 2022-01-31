@@ -11,7 +11,7 @@ const permissions: IUserType = {
     all: [headTrainer],
     read : [trainee, trainer],
     write : [trainer],
-    delete: [],
+    delete: [trainer],
   },
   [Trainees]: {
     all: [headTrainer],
@@ -23,9 +23,9 @@ const permissions: IUserType = {
 
 const users : IEmailType[] = [
   {
-    traineeEmail: 'parmeet@successive.tech',
-    reviewerEmail: 'reviewer3@successive.tech',
+    traineeEmail: 'Vishvjeet@successive.tech',
+    reviewerEmail: 'reviewer1@successive.tech',
   }
 ];
 
-export {permissions,Users,Trainees, users};
+export {permissions, users, Trainees, Users};
