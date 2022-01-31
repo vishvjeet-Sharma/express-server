@@ -22,7 +22,7 @@ export default (module, permissionType) => async (req, res, next) => {
     next({ error: 'Unauthorized', message: 'User not Authorized', status: 403 });
   }
 
-  const userData = await userRepository.findOne({_id: user.id});
+  const userData = await userRepository.findOne({_id: user.originalId});
   console.log(userData);
 
   if (!userData) {

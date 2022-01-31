@@ -22,7 +22,7 @@ export default class UserRepository extends VersionableRepository<any, mongoose.
   public updateData(filterQuery: any, data): mongoose.UpdateQuery<IUserModel> {
     return super.update(filterQuery, data);
   }
-  public delete(data: any): mongoose.Query<object, IUserModel> {
+  public delete(data: string): mongoose.Query<object, IUserModel> {
     return super.softDelete(data);
   }
 }

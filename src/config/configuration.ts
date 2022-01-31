@@ -15,6 +15,7 @@ const configuration: IConfig = Object.freeze({
   port: envVars.PORT,
   secret: envVars.TOKEN_SECRET,
   mongoURL: envVars.MONGO_URL,
+  password: envVars.PASSWORD, 
 });
 
 export default configuration;
