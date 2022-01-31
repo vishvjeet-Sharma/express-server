@@ -11,8 +11,8 @@ class User {
   getAll = async (req: Request, res: Response, next: NextFunction): Promise < Response > => {
     console.log('Get request by user', req.body);
         try {
-          const {limit=0, skip=0} = req.query;
-          const result = await userRepository.findAll({ limit, skip });
+          const {limit=0, skip=0, search='' } = req.query;
+          const result = await userRepository.findAll({ limit, skip, search });
           const count = await userRepository.count();
           return res.status(200).send({ message: 'Fetched data successfully', data: result, count });
         } catch (err) {

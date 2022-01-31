@@ -10,14 +10,14 @@ const permissions: IUserType = {
   [Users]: {
     all: [headTrainer],
     read : [trainee, headTrainer, trainer],
-    write : [trainer],
-    delete: [trainer],
+    write : [trainer, headTrainer],
+    delete: [trainer, headTrainer],
   },
   [Trainees]: {
     all: [headTrainer],
-    read : [trainee, trainer],
-    write : [trainer],
-    delete: [],
+    read : [trainee, trainer, headTrainer],
+    write : [trainer, headTrainer],
+    delete: [headTrainer],
   }
 };
 
