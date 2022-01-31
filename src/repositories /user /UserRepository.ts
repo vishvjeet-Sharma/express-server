@@ -10,13 +10,14 @@ export default class UserRepository extends VersionableRepository<any, mongoose.
   public async findOne(query): Promise<IUserModel> {
     return await super.findOne(query);
   }
-  public async find(query, projection?: any, options?: any): Promise<IUserModel[]> {
-    return await super.findAll(query, projection, options);
+  public async findAll(query, projection?: any, options?: any): Promise<IUserModel[]> {
+    const {limit, skip} = query;
+    return await super.findAll(query, projection, { sort: {createdAt: '-1'}, skip: +(skip), limit: +(limit)});
   }
   public async count(): Promise<number> {
     return await super.count();
   }
-  public async create(data: any): Promise<IUserModel> {
+  public async create(data: {}): Promise<IUserModel> {
     return await super.create(data);
   }
   public updateData(filterQuery: any, data): mongoose.UpdateQuery<IUserModel> {

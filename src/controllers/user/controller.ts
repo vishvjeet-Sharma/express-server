@@ -3,48 +3,35 @@ import * as jwt from 'jsonwebtoken';
 import config from '../../config/configuration';
 import UserRepository from '../../repositories /user /UserRepository';
 import * as bcrypt from 'bcrypt';
+import { BCRYPT_SALT_ROUNDS } from '../../../extraTs/constants';
 
 const userRepository: UserRepository = new UserRepository();
-const users = [
-  {
-    name: 'Gaurav',
-    role: 'head-trainer',
-    designation: 'Developer',
-    dept: 'Node',
-  },
-  {
-    name: 'Vishvjeet',
-    role: 'Trainee',
-    designation: 'Developer',
-    dept: 'Node',
-  },
-];
+
 class User {
-  get = async (req: Request, res: Response): Promise < Response > => {
+  getAll = async (req: Request, res: Response, next: NextFunction): Promise < Response > => {
     console.log('Get request by user', req.body);
         try {
-          const query = req.body || {}
-          const result = await userRepository.find(query);
-          return res.status(200).send({ message: 'Fetched data successfully', data: result });
-        } catch (error) {
-          return res.status(400).json({ status: 'Bad Request', message: error });
+          const {limit=0, skip=0} = req.query;
+          const result = await userRepository.findAll({ limit, skip });
+          const count = await userRepository.count();
+          return res.status(200).send({ message: 'Fetched data successfully', data: result, count });
+        } catch (err) {
+          next({ message: err.message, status: 'error' });
         }
   };
-
-  post = async (req: Request, res: Response, next: NextFunction) => {
+  create = async (req: Request, res: Response, next: NextFunction) => {
     console.log('Create request by user', req.body);
-    const { name, email, password } = req.body;
-    if (!name && !email && !password) {
-      return res
-        .status(400)
-        .send({ message: 'Required trainee details', error: 'Bad request', status: '400' });
+    try {
+      const obj = req.body;
+      const salt = bcrypt.genSaltSync(BCRYPT_SALT_ROUNDS);
+      const hash = bcrypt.hashSync(config.password, salt);
+      const response = await userRepository.create({ ...obj, password: hash});
+      return res.status(200).send({ message: 'Trainee added sucessfully', status: 'success' });
+    } catch(e) {
+      next({ message: e.message, status: 'error' });
     }
-    const data = req.body
-    await userRepository.create(data);
-    return res.status(200).send({ message: 'Trainee added sucessfully', status: 'success' });
-  }
-
-  put = async (req: Request, res: Response, next: NextFunction) => {
+  };
+  update = async (req: Request, res: Response, next: NextFunction) => {
     console.log('Update request by user', req.body);
     try {
       const{ originalId , ...rest} = req.body;
@@ -54,14 +41,12 @@ class User {
       next({ message: err.message, status: 'error' });
     }
   };
-
   delete = async (req: Request, res: Response) => {
     console.log('Delete request by user', req.body);
     const { originalId } = req.body;
     const data = await userRepository.delete(originalId);
     return res.status(200).json({ message: 'Trainee deleted successfully', data: data, status: 'success' });
   };
-
   passMatch = async (data: any) => {
     const userFound = await userRepository.findOne(data.email);
     const match = await bcrypt.compare( data.password, userFound.password)
@@ -73,7 +58,6 @@ class User {
       throw new Error ('Password not matched')
     }
   };
-
   createToken = async (req: Request, res: Response) => {
     try {
       const userFound = await this.passMatch(req.body);
@@ -85,7 +69,6 @@ class User {
     } catch (e) {
       res.status(403).send({message: 'Token generation failed', status: 'Failure'});
     }
-
   };
 }
 export default new User();
