@@ -1,97 +1,70 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction } from 'express';
 import * as jwt from 'jsonwebtoken';
 import config from '../../config/configuration';
+import UserRepository from '../../repositories /user /UserRepository';
 
-class Users {
-    get(req: Request, res: Response, next: NextFunction) {
-        const users = [
-            {
-                name: "vishvjeet",
-                designation: "developer",
-                location: "noida",
-            },
-            {
-                name: "ankush",
-                designation: "manager",
-                location: "Delhi",
-            },
-            {
-                name: "akash",
-                designation: "data analyst",
-                location: "gurgaon",
-            },
-            {
-                name: "kanika",
-                designation: "designer",
-                location: "bengaluru",
-            },
-        ];
-        return res
-            .status(200)
-            .send({ message: "Fetched data Successfully", data: users });
-    }
-    post(req: Request, res: Response, next: NextFunction) {
-        console.log(req.body);
-        const { name, designation, location } = req.body;
-        if (!name) {
-            return res
-                .status(400)
-                .send({ message: "required users details", error: "error msg" });
+const users = [
+  {
+    name: 'Gaurav',
+    role: 'head-trainer',
+    designation: 'Developer',
+    dept: 'Node',
+  },
+  {
+    name: 'Vishvjeet',
+    role: 'Trainee',
+    designation: 'Developer',
+    dept: 'Node',
+  },
+];
+class User {
+  get = async (req: Request, response: Response): Promise < Response > => {
+        const userRepository: UserRepository = new UserRepository();
+        try {
+            const query = req.body || {}
+            const result = await userRepository.find(query);
+                return response
+                .status(200)
+                .send({ message: 'Fetched data successfully', data: result });
+        } catch (error) {
+            return response
+            .status(400)
+            .json({ status: 'Bad Request', message: error });
         }
-        return res.status(200).send({ message: "users added sucessfully" });
+  };
+  post = (req: Request, res: Response, next: NextFunction) => {
+    console.log('Create request by user', req.body);
+    const { name } = req.body;
+    if (!name) {
+      return res
+        .status(400)
+        .send({ message: 'Required trainee details', error: 'Bad request', status: '400' });
     }
-    put = (req: Request, res: Response) => {
-        const users = this.rawUserData();
-        const requestName = req.params.name;
-        const data = this.rawUserData().find((post, index) => {
-            if (post.name === requestName) return true;
-        });
-        data.designation = "Associate Engineer";
-        return res
-            .status(200)
-            .send({ message: "Updated users successfully", data: users });
-    };
-    rawUserData = () => {
-        const users = [
-            {
-                name: "vishvjeet",
-                designation: "developer",
-                location: "noida",
-            },
-            {
-                name: "ankush",
-                designation: "manager",
-                location: "Delhi",
-            },
-            {
-                name: "akash",
-                designation: "data analyst",
-                location: "gurgaon",
-            },
-            {
-                name: "kanika",
-                designation: "designer",
-                location: "bengaluru",
-            },
-        ];
-        return users;
-    };
-    delete = (req: Request, res: Response) => {
-        const trainee = this.rawUserData();
-        const requestName = req.params.name;
-        const deletedData = this.rawUserData().filter((post, index) => {
-            if (post.name !== requestName) return true;
-        });
-        return res
-            .status(200)
-            .send({ message: "deleted User successfully", data: deletedData });
-    };
-
-    createToken = (req: Request, res: Response) => {
-        const { name } = req.body;
-        const token = jwt.sign(name, config.secret);
-        return res.status(200).send({message: 'Token created successfully', data: { token }, status: 'success'});
-      };
+    return res.status(200).send({ message: 'Trainee added sucessfully', status: 'success' });
+  }
+  put = (req: Request, res: Response, next: NextFunction) => {
+    console.log('Update request by user', req.body);
+    const { name, designation, dept } = req.body;
+    const newTrainee = users.find((item) => item.name === name);
+    if (!newTrainee) {
+      return res.status(400).send({ error: 'Bad Request', message: 'No Trainee Found', status: '400' });
+    }
+    const updatedTrainee = [...users, { name, designation, dept }];
+    return res.status(201).send({ message: 'Trainee Updated Successfully', data: updatedTrainee });
+  };
+  delete = (req: Request, res: Response) => {
+    console.log('Delete request by user', req.body);
+    const { name } = req.body;
+    const user = users.find((item) => item.name === name);
+    if (!user) {
+      return res.status(400).send({ error: 'Bad Request', message: 'No Trainee Found', status: '400' });
+    }
+    const deletedTrainee = users.filter((data) => data.name !== name);
+    return res.status(201).send({ message: 'Users deleted successfully', data: deletedTrainee });
+  };
+  createToken = (req: Request, res: Response) => {
+    const token = jwt.sign(req.body, config.secret);
+    return res.status(200).send({message: 'Token created successfully', data: {token}, status: 'success'});
+  };
 }
-
-export default new Users();
+export default new User();
