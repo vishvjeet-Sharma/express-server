@@ -1,10 +1,9 @@
-import {config} from 'dotenv';
+import { config } from 'dotenv';
 import * as Joi from '@hapi/joi';
-import {IConfig} from './IConfig';
+import { IConfig } from './IConfig';
 
 config();
 
-// joi
 const envVarsSchema = Joi.object({
   NODE_ENV: Joi.string().default('dev'),
   PORT: Joi.number().default(9000),
@@ -14,6 +13,7 @@ const envVars: NodeJS.ProcessEnv = process.env;
 const configuration: IConfig = Object.freeze({
   env: envVars.NODE_ENV,
   port: envVars.PORT,
+  secret: envVars.TOKEN_SECRET,
 });
 
 export default configuration;
